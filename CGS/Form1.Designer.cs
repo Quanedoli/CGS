@@ -33,6 +33,7 @@ namespace CGS
             button1 = new Button();
             comboBox1 = new ComboBox();
             comboBox2 = new ComboBox();
+            comboBox3 = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -44,7 +45,6 @@ namespace CGS
             pictureBox1.Location = new Point(0, 0);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(767, 310);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             pictureBox1.MouseDown += pictureBox1_MouseDown;
@@ -74,21 +74,34 @@ namespace CGS
             // 
             // comboBox2
             // 
-            comboBox2.Anchor = AnchorStyles.Bottom;
+            comboBox2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             comboBox2.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox2.FormattingEnabled = true;
             comboBox2.Items.AddRange(new object[] { "Чёрный", "Красный", "Зелёный", "Синий" });
-            comboBox2.Location = new Point(251, 316);
+            comboBox2.Location = new Point(176, 316);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(121, 23);
+            comboBox2.Size = new Size(100, 23);
             comboBox2.TabIndex = 3;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+            // 
+            // comboBox3
+            // 
+            comboBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox3.FormattingEnabled = true;
+            comboBox3.Items.AddRange(new object[] { "Без направляющих", "С направляющими" });
+            comboBox3.Location = new Point(427, 316);
+            comboBox3.Name = "comboBox3";
+            comboBox3.Size = new Size(133, 23);
+            comboBox3.TabIndex = 4;
+            comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(767, 344);
+            Controls.Add(comboBox3);
             Controls.Add(comboBox2);
             Controls.Add(comboBox1);
             Controls.Add(button1);
@@ -106,5 +119,6 @@ namespace CGS
         private Button button1;
         private ComboBox comboBox1;
         private ComboBox comboBox2;
+        private ComboBox comboBox3;
     }
 }

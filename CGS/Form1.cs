@@ -4,18 +4,21 @@ namespace CGS
 {
     public partial class Form1 : Form
     {
+        Bitmap bitmap;
         Graphics g;
         Pen DrawPen = new Pen(Color.Black, 1);
         const int np = 20;
         Point[] ArPoints = new Point[np];
         int CountPoints = 0;
         int? SplineType=null;
+        bool GuideCheck = false;
         public Form1()
         {
             InitializeComponent();
-            g = pictureBox1.CreateGraphics();
+            bitmap = new Bitmap(2560, 1440);
+            pictureBox1.Image = bitmap;
+            g = Graphics.FromImage(bitmap);
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            this.Resize += new EventHandler(Form1_Resize);
         }
         static double Factorial(int n)
         {
@@ -24,11 +27,11 @@ namespace CGS
                 x *= i;
             return x;
         }
-        private void Form1_Resize(object sender, EventArgs e)
+        public void SetBoxesStatus(bool Status)
         {
-            pictureBox1.Invalidate();
-            g = pictureBox1.CreateGraphics();
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            comboBox1.Enabled = Status;
+            comboBox2.Enabled = Status;
+            comboBox3.Enabled = Status;
         }
         public void DrawCubeSpline(Pen DrPen, Point[] P)
         {
@@ -63,6 +66,7 @@ namespace CGS
                 Ppred = Pt;
                 t = t + dt;
             }
+            pictureBox1.Image = bitmap;
         }
         public void DrawBezie(Pen DrPen,Point[] P,int n)
         {
@@ -89,27 +93,41 @@ namespace CGS
                 xPred = (int)xt;
                 yPred = (int)yt;
             }
+            pictureBox1.Image = bitmap;
         }
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (CountPoints >= np) return;
+            if (CountPoints >= np) DrawBezie(DrawPen, ArPoints, CountPoints);
             if (SplineType == null) return;
-            ArPoints[CountPoints].X = e.X; ArPoints[CountPoints].Y = e.Y;
-            g.DrawEllipse(DrawPen, e.X - 2, e.Y - 2, 5, 5);
+            if (e.Button == MouseButtons.Left)
+            {
+                if (comboBox1.Enabled == true) { 
+                SetBoxesStatus(false);
+                }
+                ArPoints[CountPoints].X = e.X; ArPoints[CountPoints].Y = e.Y;
+                g.DrawEllipse(DrawPen, e.X - 2, e.Y - 2, 5, 5);
+            }
             if (SplineType == 0) // Кубический сплайн
             {
                 switch (CountPoints)
                 {
-                    case 1: // первый вектор
+                    case 1: // первый вектор    
                         {
-                            g.DrawLine(DrawPen, ArPoints[0], ArPoints[1]);
+                            if (GuideCheck == true)
+                            {
+                                g.DrawLine(DrawPen, ArPoints[0], ArPoints[1]);
+                            }
                             CountPoints++;
                         }
                         break;
                     case 3: // второй вектор
                         {
-                            g.DrawLine(DrawPen, ArPoints[2], ArPoints[3]);
+                            if (GuideCheck == true)
+                            {
+                                g.DrawLine(DrawPen, ArPoints[2], ArPoints[3]);
+                            }
                             DrawCubeSpline(DrawPen, ArPoints);
+                            SetBoxesStatus(true);
                             CountPoints = 0;
                         }
                         break;
@@ -122,15 +140,42 @@ namespace CGS
             {
                 if (e.Button == MouseButtons.Right) // Конец ввода
                 {
-                    DrawBezie(DrawPen, ArPoints, CountPoints);
+                    DrawBezie(DrawPen, ArPoints, CountPoints - 1);
+                    SetBoxesStatus(true);
                     CountPoints = 0;
                 }
-                else CountPoints++;
+                else
+                {
+                    if (CountPoints == 0)
+                    {
+                        CountPoints++;
+                    }
+                    else
+                    {
+                        if (GuideCheck == true)
+                        {
+                            g.DrawLine(DrawPen, ArPoints[CountPoints - 1], ArPoints[CountPoints]);
+                        }
+                        CountPoints++;
+                    }
+                }
             }
+            pictureBox1.Image = bitmap;
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             SplineType = comboBox1.SelectedIndex;
+        }
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboBox3.SelectedIndex == 0 )
+            {
+                GuideCheck = false;
+            }
+            else
+            {
+                GuideCheck = true;
+            }
         }
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -154,6 +199,11 @@ namespace CGS
         {
             g.Clear(Color.White);
             CountPoints = 0;
+            pictureBox1.Image = bitmap;
+            if (comboBox1.Enabled == false)
+            {
+                SetBoxesStatus(true);
+            }
         }
 
     }
