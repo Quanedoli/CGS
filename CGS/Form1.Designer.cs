@@ -1,5 +1,4 @@
-﻿
-namespace CGS
+﻿namespace CGS
 {
     partial class Form1
     {
@@ -89,7 +88,7 @@ namespace CGS
             comboBox3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             comboBox3.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox3.FormattingEnabled = true;
-            comboBox3.Items.AddRange(new object[] { "Без направляющих", "С направляющими" });
+            comboBox3.Items.AddRange(new object[] { "Без касательных", "С касательными" });
             comboBox3.Location = new Point(427, 316);
             comboBox3.Name = "comboBox3";
             comboBox3.Size = new Size(133, 23);
